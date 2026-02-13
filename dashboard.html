@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - College Lost & Found</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div>
+    <strong>College Lost & Found</strong>
+  </div>
+  <div>
+    <a href="lost-items.html">Lost Items</a>
+    <a href="found-items.html">Found Items</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="#" id="logoutBtn">Logout</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <h2>Dashboard</h2>
+
+  <!-- USER INFO -->
+  <div id="userInfo" class="card"></div>
+
+  <!-- TABS -->
+  <div style="margin-top:20px;">
+    <button onclick="showTab('lost')">My Lost Items</button>
+    <button onclick="showTab('found')">My Found Items</button>
+    <button onclick="showTab('requests')">My Requests</button>
+  </div>
+
+  <div id="tabContent" style="margin-top:20px;"></div>
+
+</div>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>
+

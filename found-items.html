@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Found Items - College Lost & Found</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div>
+    <strong>College Lost & Found</strong>
+  </div>
+  <div>
+    <a href="lost-items.html">Lost Items</a>
+    <a href="found-items.html">Found Items</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="#" id="logoutBtn">Logout</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <h2>Report Found Item</h2>
+
+  <!-- FOUND ITEM FORM -->
+  <form id="foundItemForm">
+    <input type="text" id="title" placeholder="Item Title" required>
+
+    <select id="category" required>
+      <option value="">Select Category</option>
+      <option value="Electronics">Electronics</option>
+      <option value="Accessories">Accessories</option>
+      <option value="Documents">Documents</option>
+      <option value="Bags">Bags</option>
+      <option value="Others">Others</option>
+    </select>
+
+    <textarea id="description" placeholder="Description" required></textarea>
+
+    <input type="date" id="dateFound" required>
+
+    <input type="text" id="location" placeholder="Location Found" required>
+
+    <input type="file" id="imageUpload" multiple accept="image/*" required>
+
+    <button type="submit">Add Found Item</button>
+  </form>
+
+  <hr>
+
+  <h2>Search Found Items</h2>
+
+  <input type="text" id="searchInput" placeholder="Search by title...">
+
+  <select id="filterCategory">
+    <option value="">All Categories</option>
+    <option value="Electronics">Electronics</option>
+    <option value="Accessories">Accessories</option>
+    <option value="Documents">Documents</option>
+    <option value="Bags">Bags</option>
+    <option value="Others">Others</option>
+  </select>
+
+  <div id="foundItemsList"></div>
+
+</div>
+
+<!-- REQUEST MODAL -->
+<div class="modal" id="requestModal">
+  <div class="modal-content">
+    <h3>Request Item</h3>
+    <textarea id="requestMessage" placeholder="Why is this yours?" required></textarea>
+    <button id="sendRequestBtn">Send Request</button>
+    <button onclick="closeModal()">Cancel</button>
+  </div>
+</div>
+
+<script src="js/found-items.js"></script>
+</body>
+</html>
