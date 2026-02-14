@@ -183,16 +183,7 @@ Fetch logged-in user's found items.
 
 Fetch requests sent or received.
 
----
-
-# Project Demo
-
-## Video
-__________________________________________
-
-*Explain what the video demonstrates:*  
-_____________________________________________________  
-_____________________________________________________  
+--- 
 
 ## Live Project
 https://anaghasnair355.github.io/tinkherhack/
