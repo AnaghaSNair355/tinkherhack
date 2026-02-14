@@ -1,142 +1,148 @@
 // ===============================
 // SESSION CHECK
 // ===============================
-const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+var supabase = window.supabaseClient;
+var currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 if (!currentUser) {
   window.location.href = "index.html";
 }
 
-document.getElementById("logoutBtn").addEventListener("click", function() {
+document.getElementById("logoutBtn").addEventListener("click", async function () {
+  if (supabase) await supabase.auth.signOut();
   localStorage.removeItem("currentUser");
   window.location.href = "index.html";
 });
 
-
 // ===============================
-// GET + SAVE FOUND ITEMS
+// ADD FOUND ITEM (Supabase + Storage)
 // ===============================
-function getFoundItems() {
-  return JSON.parse(localStorage.getItem("foundItems")) || [];
-}
+var form = document.getElementById("foundItemForm");
 
-function saveFoundItems(items) {
-  localStorage.setItem("foundItems", JSON.stringify(items));
-}
-
-function getRequests() {
-  return JSON.parse(localStorage.getItem("requests")) || [];
-}
-
-function saveRequests(requests) {
-  localStorage.setItem("requests", JSON.stringify(requests));
-}
-
-
-// ===============================
-// IMAGE UPLOAD → BASE64
-// ===============================
-function convertImagesToBase64(files) {
-  const promises = [];
-
-  for (let file of files) {
-    const promise = new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        resolve(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    });
-    promises.push(promise);
-  }
-
-  return Promise.all(promises);
-}
-
-
-// ===============================
-// ADD FOUND ITEM
-// ===============================
-const form = document.getElementById("foundItemForm");
-
-form.addEventListener("submit", async function(e) {
+form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const items = getFoundItems();
+  var titleEl = document.getElementById("title");
+  var categoryEl = document.getElementById("category");
+  var descriptionEl = document.getElementById("description");
+  var dateFoundEl = document.getElementById("dateFound");
+  var locationEl = document.getElementById("location");
+  var imageUploadEl = document.getElementById("imageUpload");
 
-  const files = document.getElementById("imageUpload").files;
-  const images = await convertImagesToBase64(files);
+  var title = titleEl.value.trim();
+  var category = categoryEl.value;
+  var description = descriptionEl.value.trim();
+  var dateFound = dateFoundEl.value;
+  var location = locationEl.value.trim();
+  var files = imageUploadEl.files;
 
-  const newItem = {
-    id: Date.now(),
-    userId: currentUser.id,
-    title: title.value,
-    category: category.value,
-    description: description.value,
-    dateFound: dateFound.value,
-    location: location.value,
-    images: images,
-    status: "available"
-  };
+  if (!supabase) {
+    alert("Supabase not loaded.");
+    return;
+  }
 
-  items.push(newItem);
-  saveFoundItems(items);
+  // Insert found item first to get id
+  var { data: newItem, error: insertError } = await supabase
+    .from("found_items")
+    .insert({
+      user_id: currentUser.id,
+      title: title,
+      category: category,
+      description: description,
+      date_found: dateFound,
+      location: location,
+      image_paths: [],
+      status: "available"
+    })
+    .select("id")
+    .single();
+
+  if (insertError) {
+    alert("Error: " + insertError.message);
+    return;
+  }
+
+  var imagePaths = [];
+  if (files && files.length > 0) {
+    var basePath = currentUser.id + "/" + newItem.id + "/";
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i];
+      var fileName = basePath + Date.now() + "_" + i + "_" + (file.name || "img");
+      var { error: uploadError } = await supabase.storage.from("found-images").upload(fileName, file, { upsert: true });
+      if (!uploadError) {
+        imagePaths.push(fileName);
+      }
+    }
+    if (imagePaths.length > 0) {
+      await supabase.from("found_items").update({ image_paths: imagePaths }).eq("id", newItem.id);
+    }
+  }
 
   form.reset();
   displayItems();
 });
 
-
 // ===============================
-// DISPLAY ITEMS
+// DISPLAY FOUND ITEMS (Supabase)
 // ===============================
-function displayItems() {
-  const items = getFoundItems();
-  const list = document.getElementById("foundItemsList");
+async function displayItems() {
+  var list = document.getElementById("foundItemsList");
   list.innerHTML = "";
 
-  const searchText = document.getElementById("searchInput").value.toLowerCase();
-  const filterCategory = document.getElementById("filterCategory").value;
+  var searchText = (document.getElementById("searchInput").value || "").toLowerCase();
+  var filterCategory = document.getElementById("filterCategory").value;
 
-  const filtered = items.filter(item => {
-    return (
-      item.title.toLowerCase().includes(searchText) &&
-      (filterCategory === "" || item.category === filterCategory)
-    );
+  if (!supabase) {
+    list.innerHTML = "<p>Supabase not loaded.</p>";
+    return;
+  }
+
+  var { data: items, error } = await supabase.from("found_items").select("*").order("created_at", { ascending: false });
+
+  if (error) {
+    list.innerHTML = "<p>Error: " + error.message + "</p>";
+    return;
+  }
+
+  var filtered = (items || []).filter(function (item) {
+    var matchSearch = !searchText || (item.title && item.title.toLowerCase().indexOf(searchText) !== -1);
+    var matchCategory = !filterCategory || item.category === filterCategory;
+    return matchSearch && matchCategory;
   });
 
-  filtered.forEach(item => {
-    const card = document.createElement("div");
+  filtered.forEach(function (item) {
+    var card = document.createElement("div");
     card.className = "card";
 
-    let imagesHTML = "";
-    item.images.forEach(img => {
-      imagesHTML += `<img src="${img}" alt="Item Image">`;
-    });
+    var imagesHTML = "";
+    if (item.image_paths && item.image_paths.length) {
+      item.image_paths.forEach(function (path) {
+        var url = supabase.storage.from("found-images").getPublicUrl(path).data.publicUrl;
+        imagesHTML += "<img src=\"" + url + "\" alt=\"Item\" width=\"100\">";
+      });
+    }
 
-    card.innerHTML = `
-      <h3>${item.title}</h3>
-      <p><strong>Category:</strong> ${item.category}</p>
-      <p><strong>Description:</strong> ${item.description}</p>
-      <p><strong>Date Found:</strong> ${item.dateFound}</p>
-      <p><strong>Location:</strong> ${item.location}</p>
-      ${imagesHTML}
-      ${
-        item.userId !== currentUser.id && item.status === "available"
-          ? `<button onclick="openModal(${item.id})">Request Item</button>`
-          : ""
-      }
-    `;
+    var requestBtn = "";
+    if (item.user_id !== currentUser.id && item.status === "available") {
+      requestBtn = "<button onclick=\"openModal(" + item.id + ")\">Request Item</button>";
+    }
 
+    card.innerHTML =
+      "<h3>" + item.title + "</h3>" +
+      "<p><strong>Category:</strong> " + item.category + "</p>" +
+      "<p><strong>Description:</strong> " + (item.description || "") + "</p>" +
+      "<p><strong>Date Found:</strong> " + item.date_found + "</p>" +
+      "<p><strong>Location:</strong> " + item.location + "</p>" +
+      imagesHTML +
+      requestBtn;
     list.appendChild(card);
   });
 }
 
-
 // ===============================
-// MODAL SYSTEM
+// MODAL - REQUEST ITEM (Supabase)
 // ===============================
-let selectedItemId = null;
+var selectedItemId = null;
 
 function openModal(id) {
   selectedItemId = id;
@@ -146,40 +152,37 @@ function openModal(id) {
 function closeModal() {
   document.getElementById("requestModal").style.display = "none";
   document.getElementById("requestMessage").value = "";
+  selectedItemId = null;
 }
 
-document.getElementById("sendRequestBtn").addEventListener("click", function() {
-  const message = document.getElementById("requestMessage").value;
-
+document.getElementById("sendRequestBtn").addEventListener("click", async function () {
+  var message = document.getElementById("requestMessage").value.trim();
   if (!message) {
-    alert("Please enter message");
+    alert("Please enter a message.");
     return;
   }
+  if (!selectedItemId || !supabase) return;
 
-  const requests = getRequests();
-
-  const newRequest = {
-    id: Date.now(),
-    foundItemId: selectedItemId,
-    requesterId: currentUser.id,
+  var { error } = await supabase.from("requests").insert({
+    found_item_id: selectedItemId,
+    requester_id: currentUser.id,
     message: message,
     status: "pending"
-  };
+  });
 
-  requests.push(newRequest);
-  saveRequests(requests);
-
+  if (error) {
+    alert("Error: " + error.message);
+    return;
+  }
   alert("Request Sent!");
   closeModal();
 });
-
 
 // ===============================
 // SEARCH + FILTER EVENTS
 // ===============================
 document.getElementById("searchInput").addEventListener("input", displayItems);
 document.getElementById("filterCategory").addEventListener("change", displayItems);
-
 
 // Initial Load
 displayItems();
