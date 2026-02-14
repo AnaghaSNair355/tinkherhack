@@ -151,7 +151,7 @@ _____________________________________________________
 ### Base URL
 
 ```
-https://_____________________________.supabase.co/rest/v1
+https://aaxfzkfelxsizhbtdofo.supabase.co
 ```
 
 ### Example Endpoints
@@ -161,8 +161,8 @@ Fetch logged-in user's lost items.
 
 Headers:
 ```
-apikey: _____________________________
-Authorization: Bearer _____________________________
+apikey: sb_publishable_MQ7WTCYKKn_Na3sQNAcbhQ_CgPaj1_z
+Authorization: Bearer https://aaxfzkfelxsizhbtdofo.supabase.co
 ```
 
 ---
@@ -200,9 +200,8 @@ https://anaghasnair355.github.io/tinkherhack/
 ---
 
 # Team Contributions
-
-- _____________________________: __________________________________________
-- _____________________________: __________________________________________
+ANAGHA S NAIR: FRONT END
+SNEHA D GEORGE:DATABASE
 
 ---
 
