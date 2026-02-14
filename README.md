@@ -16,7 +16,8 @@ TINKTEAM
 - Member 2: Sneha D George
 
 ### Hosted Project Link
-__________________________________________
+
+https://anaghasnair355.github.io/tinkherhack/
 
 ---
 
@@ -80,8 +81,8 @@ Not Applicable
 ### Installation
 
 ```bash
-git clone https://github.com/_____________________________
-cd _____________________________
+git clone https://github.com/AnaghaSNair355/tinkherhack/
+cd tinkherhack
 ```
 
 ### Configuration
@@ -195,22 +196,6 @@ _____________________________________________________
 
 ## Live Project
 https://anaghasnair355.github.io/tinkherhack/
-
----
-
-# AI Tools Used (Optional)
-
-Tool Used: _____________________________  
-
-Purpose:
-- __________________________________________
-- __________________________________________
-
-Approximate AI Contribution: _____________________________
-
-Human Contributions:
-- __________________________________________
-- __________________________________________
 
 ---
 
