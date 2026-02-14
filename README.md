@@ -136,23 +136,23 @@ Our website has a frontend for users to report or view items, a backend server m
 
 ![Workflow](docs/workflow.png)
 
-User Reports Lost Item
+-User Reports Lost Item
 
 User fills out a form with item details and contact info.
 
-User Reports Found Item
+-User Reports Found Item
 
 Another user can report found items, including a photo and location.
 
-Matching & Browsing
+-Matching & Browsing
 
 Users can search or filter through reported items to find matches.
 
-Contact & Claim
+-Contact & Claim
 
 Once a match is found, users can contact the other person via email or phone (through the website).
 
-Update Status
+-Update Status
 
 After the item is claimed, the record is updated/removed from the list.
 
