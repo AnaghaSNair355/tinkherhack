@@ -128,9 +128,7 @@ Open `dashboard.html` in your browser.
 
 ![Architecture Diagram](docs/architecture.png)
 
-*Explain your system architecture here:*  
-_____________________________________________________  
-_____________________________________________________  
+Our website has a frontend for users to report or view items, a backend server managing data and a database storing all lost and found records.  
 
 ---
 
@@ -138,11 +136,16 @@ _____________________________________________________
 
 ![Workflow](docs/workflow.png)
 
-*Explain your workflow here:*  
-_____________________________________________________  
-_____________________________________________________  
-
----
+#User Reports Lost Item
+User fills out a form with item details and contact info.
+#User Reports Found Item
+Another user can report found items, including a photo and location.
+#Matching & Browsing
+Users can search or filter through reported items to find matches.
+#Contact & Claim
+Once a match is found, users can contact the other person via email or phone (through the website).
+#Update Status
+After the item is claimed, the record is updated/removed from the list.
 
 # Additional Documentation
 
