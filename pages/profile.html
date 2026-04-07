@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Update your profile information.">
+  <title>Update Profile — Lost & Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<!-- Mobile hamburger -->
+<button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">🔍</div>
+        Lost &amp; Found
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="userAvatar">?</div>
+      <div class="sidebar-user-info">
+        <h3 id="userName">—</h3>
+        <p id="userEmail">—</p>
+      </div>
+      <a href="profile.html" class="btn btn-primary" style="display:block; text-align:center; margin-top:8px; font-size:12px; padding:4px 8px; text-decoration:none;">Update Profile</a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a href="lost-items.html" class="nav-link">
+        <span class="nav-icon">📝</span> Report Lost
+      </a>
+      <a href="browse-lost.html" class="nav-link">
+        <span class="nav-icon">🔎</span> Browse Lost
+      </a>
+      <a href="found-items.html" class="nav-link">
+        <span class="nav-icon">📸</span> Browse Found
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-logout" id="logoutBtn">
+        <span class="nav-icon">🚪</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Update Profile</h1>
+      <p>Manage your personal details and contact info.</p>
+    </div>
+
+    <div class="form-card">
+      <form id="profileForm">
+        <div class="form-group">
+          <label for="profName">Full Name</label>
+          <input type="text" id="profName" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="profPhone">Phone Number</label>
+          <input type="tel" id="profPhone" class="form-input" placeholder="+1234567890">
+        </div>
+        <div class="form-group">
+          <label for="profRoll">Roll / ID Number</label>
+          <input type="text" id="profRoll" class="form-input" placeholder="e.g. 21BCE1234">
+        </div>
+        <div class="card-actions mt-16">
+          <button type="submit" class="btn btn-primary-full">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/profile.js"></script>
+</body>
+</html>

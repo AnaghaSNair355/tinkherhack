@@ -6,7 +6,7 @@
   <meta name="description" content="Dashboard — manage your lost items, found items, and claim requests.">
   <title>Dashboard — Lost & Found</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
@@ -17,6 +17,22 @@
 
 <!-- Sidebar overlay (mobile) -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- NOTIFICATIONS MODAL -->
+<div class="modal-overlay" id="notifModal">
+  <div class="modal-card" style="max-height:80vh; overflow-y:auto; width:90%; max-width:500px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="margin:0;">Notifications 🔔</h2>
+      <button class="btn btn-ghost" onclick="closeNotifModal()" style="padding:4px 8px;">✕</button>
+    </div>
+    <div id="notifList" style="display:flex; flex-direction:column; gap:8px;">
+      <!-- loaded via js -->
+    </div>
+    <div class="card-actions mt-16" style="justify-content: flex-end;">
+      <button class="btn btn-outline-danger" id="clearNotifBtn">Clear All</button>
+    </div>
+  </div>
+</div>
 
 <div class="app-layout">
 
@@ -35,20 +51,18 @@
         <h3 id="userName">—</h3>
         <p id="userEmail">—</p>
       </div>
+      <a href="profile.html" class="btn btn-primary" style="display:block; text-align:center; box-sizing:border-box; width:100%; margin-top:8px; font-size:12px; padding:4px 8px; text-decoration:none;">Update Profile</a>
     </div>
 
     <nav class="sidebar-nav">
-      <button class="nav-link active" onclick="switchTab('lost', this)" id="navLost">
-        <span class="nav-icon">📦</span> My Lost Items
-      </button>
-      <button class="nav-link" onclick="switchTab('found', this)" id="navFound">
-        <span class="nav-icon">🎒</span> My Found Items
-      </button>
-      <button class="nav-link" onclick="switchTab('requests', this)" id="navRequests">
-        <span class="nav-icon">📩</span> My Requests
-      </button>
+      <a href="dashboard.html" class="nav-link active">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
       <a href="lost-items.html" class="nav-link">
         <span class="nav-icon">📝</span> Report Lost
+      </a>
+      <a href="browse-lost.html" class="nav-link">
+        <span class="nav-icon">🔎</span> Browse Lost
       </a>
       <a href="found-items.html" class="nav-link">
         <span class="nav-icon">📸</span> Browse Found
@@ -64,9 +78,15 @@
 
   <!-- MAIN CONTENT -->
   <main class="main-content">
-    <div class="page-header">
-      <h1>Dashboard</h1>
-      <p>Manage your items and requests</p>
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      <div>
+        <h1 style="margin-bottom:4px;">Dashboard</h1>
+        <p>Manage your items and requests</p>
+      </div>
+      <button class="btn btn-primary" id="notifBtn" style="position:relative; display:flex; align-items:center; gap:8px;">
+        🔔 Notifications
+        <span id="notifBadge" class="badge badge-danger" style="position:absolute; top:-8px; right:-8px; display:none; padding:2px 6px; font-size:10px; background-color: var(--danger, red); color: white; border-radius: 12px; min-width: 18px; text-align: center;">0</span>
+      </button>
     </div>
 
     <!-- Tabs -->
@@ -84,8 +104,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="js/supabase.js"></script>
-<script src="js/dashboard.js"></script>
+<script src="../config.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/dashboard.js"></script>
 </body>
 </html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Report a lost item on campus and browse lost item listings.">
+  <title>Lost Items — Lost & Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<!-- Mobile hamburger -->
+<button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">🔍</div>
+        Lost &amp; Found
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="userAvatar">?</div>
+      <div class="sidebar-user-info">
+        <h3 id="userName">—</h3>
+        <p id="userEmail">—</p>
+      </div>
+      <a href="profile.html" class="btn btn-primary" style="display:block; text-align:center; box-sizing:border-box; width:100%; margin-top:8px; font-size:12px; padding:4px 8px; text-decoration:none;">Update Profile</a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a href="lost-items.html" class="nav-link active">
+        <span class="nav-icon">📝</span> Report Lost
+      </a>
+      <a href="browse-lost.html" class="nav-link">
+        <span class="nav-icon">🔎</span> Browse Lost
+      </a>
+      <a href="found-items.html" class="nav-link">
+        <span class="nav-icon">📸</span> Browse Found
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-logout" id="logoutBtn">
+        <span class="nav-icon">🚪</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Report a Lost Item</h1>
+      <p>Provide details about the item you've lost so others can help</p>
+    </div>
+
+    <!-- REPORT FORM -->
+    <div class="form-card">
+      <h2>Item Details</h2>
+      <p class="subtitle">Fill in as much information as you can</p>
+
+      <form id="lostItemForm">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" class="form-input" placeholder="e.g. Blue Water Bottle" required>
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" class="form-select" required>
+            <option value="">Select Category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Documents">Documents</option>
+            <option value="Bags">Bags</option>
+            <option value="Others">Others</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" class="form-textarea" placeholder="Color, brand, distinguishing features…" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="dateLost">Date Lost</label>
+          <input type="date" id="dateLost" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" id="location" class="form-input" placeholder="e.g. Library, 2nd Floor" required>
+        </div>
+
+        <div class="info-box">
+          💡 We'll notify you if someone reports a matching found item.
+        </div>
+
+        <button type="submit" class="btn btn-primary-full">Submit Report</button>
+      </form>
+    </div>
+
+  </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/lost-items.js"></script>
+</body>
+</html>

@@ -6,7 +6,7 @@
   <meta name="description" content="Browse found items on campus or report something you've found.">
   <title>Found Items — Lost & Found</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
@@ -32,6 +32,7 @@
         <h3 id="userName">—</h3>
         <p id="userEmail">—</p>
       </div>
+      <a href="profile.html" class="btn btn-primary" style="display:block; text-align:center; box-sizing:border-box; width:100%; margin-top:8px; font-size:12px; padding:4px 8px; text-decoration:none;">Update Profile</a>
     </div>
     <nav class="sidebar-nav">
       <a href="dashboard.html" class="nav-link">
@@ -39,6 +40,9 @@
       </a>
       <a href="lost-items.html" class="nav-link">
         <span class="nav-icon">📝</span> Report Lost
+      </a>
+      <a href="browse-lost.html" class="nav-link">
+        <span class="nav-icon">🔎</span> Browse Lost
       </a>
       <a href="found-items.html" class="nav-link active">
         <span class="nav-icon">📸</span> Browse Found
@@ -63,6 +67,10 @@
       <div class="search-input-wrap">
         <span class="search-icon">🔍</span>
         <input type="text" id="searchInput" class="form-input" placeholder="Search by title…">
+      </div>
+      <div class="search-input-wrap">
+        <span class="search-icon">📍</span>
+        <input type="text" id="searchLocation" class="form-input" placeholder="Search by location…">
       </div>
       <select id="filterCategory" class="form-select">
         <option value="">All Categories</option>
@@ -151,8 +159,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="js/supabase.js"></script>
-<script src="js/found-items.js"></script>
+<script src="../config.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/found-items.js"></script>
 </body>
 </html>

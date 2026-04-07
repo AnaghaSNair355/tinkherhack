@@ -1,18 +1,17 @@
-// ========================================
-// TOAST NOTIFICATION SYSTEM
-// ========================================
+function sanitize(str) {
+  var d = document.createElement("div");
+  d.textContent = str || "";
+  return d.innerHTML;
+}
+
 function showToast(message, type) {
   type = type || "success";
   var container = document.getElementById("toast-container");
-  if (!container) {
-    container = document.createElement("div");
-    container.id = "toast-container";
-    document.body.appendChild(container);
-  }
+  if (!container) return;
   var toast = document.createElement("div");
   toast.className = "toast toast-" + type;
-  var icon = type === "success" ? "✓" : "✕";
-  toast.innerHTML = '<span class="toast-icon">' + icon + "</span>" + message;
+  var icon = type === "success" ? "✓ " : "✕ ";
+  toast.textContent = icon + message;
   container.appendChild(toast);
   setTimeout(function () {
     toast.classList.add("toast-out");
@@ -20,9 +19,6 @@ function showToast(message, type) {
   }, 3000);
 }
 
-// ========================================
-// HELPERS
-// ========================================
 function getInitials(name) {
   if (!name) return "?";
   var parts = name.trim().split(" ");
@@ -32,28 +28,21 @@ function getInitials(name) {
 
 function getBadgeClass(status) {
   var map = {
-    active: "badge-active",
-    available: "badge-available",
-    found: "badge-found",
-    claimed: "badge-claimed",
-    pending: "badge-pending",
-    accepted: "badge-accepted",
-    rejected: "badge-rejected"
+    active: "badge-active", available: "badge-available", found: "badge-found",
+    claimed: "badge-claimed", pending: "badge-pending",
+    accepted: "badge-accepted", rejected: "badge-rejected"
   };
   return map[status] || "badge-found";
 }
 
 function showSpinner(container) {
-  container.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
+  if (container) container.innerHTML = '<div class="spinner-wrap"><div class="spinner"></div></div>';
 }
 
 function showEmpty(container, emoji, text) {
-  container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + emoji + '</div><p>' + text + '</p></div>';
+  if (container) container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">' + sanitize(emoji) + '</div><p>' + sanitize(text) + '</p></div>';
 }
 
-// ========================================
-// SIDEBAR INIT
-// ========================================
 function initSidebar() {
   var currentUser = JSON.parse(localStorage.getItem("currentUser"));
   if (currentUser) {
@@ -68,7 +57,6 @@ function initSidebar() {
   var hamburger = document.getElementById("hamburgerBtn");
   var sidebar = document.getElementById("sidebar");
   var overlay = document.getElementById("sidebarOverlay");
-
   if (hamburger && sidebar) {
     hamburger.addEventListener("click", function () {
       sidebar.classList.toggle("open");
@@ -77,149 +65,128 @@ function initSidebar() {
   }
   if (overlay) {
     overlay.addEventListener("click", function () {
-      sidebar.classList.remove("open");
+      if (sidebar) sidebar.classList.remove("open");
       overlay.classList.remove("open");
     });
   }
 }
 
-// ========================================
-// SESSION CHECK
-// ========================================
 var supabase = window.supabaseClient;
 var currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
 if (!currentUser) {
   window.location.href = "index.html";
-}
+} else {
+  initSidebar();
 
-// Init sidebar + logout
-initSidebar();
-
-document.getElementById("logoutBtn").addEventListener("click", async function () {
-  if (supabase) await supabase.auth.signOut();
-  localStorage.removeItem("currentUser");
-  window.location.href = "index.html";
-});
-
-// ========================================
-// ADD LOST ITEM (Supabase)
-// ========================================
-var form = document.getElementById("lostItemForm");
-
-form.addEventListener("submit", async function (e) {
-  e.preventDefault();
-
-  var title = document.getElementById("title").value.trim();
-  var category = document.getElementById("category").value;
-  var description = document.getElementById("description").value.trim();
-  var dateLost = document.getElementById("dateLost").value;
-  var location = document.getElementById("location").value.trim();
-
-  if (!supabase) {
-    showToast("Supabase not loaded.", "error");
-    return;
+  var logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async function () {
+      if (supabase) await supabase.auth.signOut();
+      localStorage.removeItem("currentUser");
+      window.location.href = "index.html";
+    });
   }
 
-  var { data, error } = await supabase.from("lost_items").insert({
-    user_id: currentUser.id,
-    title: title,
-    category: category,
-    description: description,
-    date_lost: dateLost,
-    location: location,
-    status: "active"
-  }).select("id").single();
+  var form = document.getElementById("lostItemForm");
+  if (form) {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      var tEl = document.getElementById("title");
+      var cEl = document.getElementById("category");
+      var dEl = document.getElementById("description");
+      var dlEl = document.getElementById("dateLost");
+      var lEl = document.getElementById("location");
 
-  if (error) {
-    showToast("Error: " + error.message, "error");
-    return;
+      if (!tEl || !cEl || !dEl || !dlEl || !lEl) return;
+
+      var title = tEl.value.trim();
+      var category = cEl.value;
+      var description = dEl.value.trim();
+      var dateLost = dlEl.value;
+      var location = lEl.value.trim();
+
+      if (!supabase) { showToast("Supabase not loaded.", "error"); return; }
+
+      var { data, error } = await supabase.from("lost_items").insert({
+        user_id: currentUser.id, title: title, category: category,
+        description: description, date_lost: dateLost,
+        location: location, status: "active"
+      }).select("id").single();
+
+      if (error) { showToast("Error: " + error.message, "error"); return; }
+      showToast("Lost item reported!");
+      form.reset();
+      displayItems();
+    });
   }
 
-  showToast("Lost item reported!");
-  form.reset();
-  displayItems();
-});
+  window.displayItems = async function() {
+    var list = document.getElementById("lostItemsList");
+    if (!list) return;
+    showSpinner(list);
 
-// ========================================
-// DISPLAY LOST ITEMS
-// ========================================
-async function displayItems() {
-  var list = document.getElementById("lostItemsList");
-  showSpinner(list);
+    var sInput = document.getElementById("searchInput");
+    var slInput = document.getElementById("searchLocation");
+    var fCat = document.getElementById("filterCategory");
 
-  var searchText = (document.getElementById("searchInput").value || "").toLowerCase();
-  var filterCategory = document.getElementById("filterCategory").value;
+    var searchText = sInput ? (sInput.value || "").toLowerCase() : "";
+    var searchLoc = slInput ? (slInput.value || "").toLowerCase() : "";
+    var filterCategory = fCat ? fCat.value : "";
 
-  if (!supabase) {
-    showEmpty(list, "⚠️", "Supabase not loaded.");
-    return;
-  }
+    if (!supabase) { showEmpty(list, "⚠️", "Supabase not loaded."); return; }
 
-  var { data: items, error } = await supabase.from("lost_items").select("*").order("created_at", { ascending: false });
+    var { data: items, error } = await supabase.from("lost_items").select("*").order("created_at", { ascending: false });
+    if (error) { list.innerHTML = '<p>Error: ' + sanitize(error.message) + '</p>'; return; }
 
-  if (error) {
-    list.innerHTML = '<p style="color:var(--danger);">Error: ' + error.message + '</p>';
-    return;
-  }
+    var filtered = (items || []).filter(function (item) {
+      var matchSearch = !searchText || ((item.title||"").toLowerCase().indexOf(searchText) !== -1);
+      var matchLocation = !searchLoc || ((item.location||"").toLowerCase().indexOf(searchLoc) !== -1);
+      var matchCategory = !filterCategory || item.category === filterCategory;
+      return matchSearch && matchLocation && matchCategory;
+    });
 
-  var filtered = (items || []).filter(function (item) {
-    var matchSearch = !searchText || (item.title && item.title.toLowerCase().indexOf(searchText) !== -1);
-    var matchCategory = !filterCategory || item.category === filterCategory;
-    return matchSearch && matchCategory;
-  });
-
-  if (filtered.length === 0) {
-    showEmpty(list, "📭", "No lost items found.");
-    return;
-  }
-
-  list.innerHTML = "";
-  filtered.forEach(function (item) {
-    var card = document.createElement("div");
-    card.className = "card";
-
-    var markBtn = "";
-    if (item.status === "active" && item.user_id === currentUser.id) {
-      markBtn = '<button class="btn btn-primary" onclick="markAsFound(' + item.id + ')">Mark as Found</button>';
+    if (!filtered || filtered.length === 0) {
+      showEmpty(list, "📭", "No lost items found.");
+      return;
     }
 
-    card.innerHTML =
-      '<div class="card-title">' + item.title + '</div>' +
-      '<span class="badge ' + getBadgeClass(item.status) + '">' + item.status + '</span>' +
-      '<p class="card-meta mt-8"><strong>Category:</strong> ' + item.category + '</p>' +
-      '<p class="card-meta"><strong>Description:</strong> ' + (item.description || "—") + '</p>' +
-      '<p class="card-meta"><strong>Date Lost:</strong> ' + item.date_lost + '</p>' +
-      '<p class="card-meta"><strong>Location:</strong> ' + item.location + '</p>' +
-      '<div class="card-actions">' + markBtn + '</div>';
-    list.appendChild(card);
-  });
-}
-
-// ========================================
-// MARK AS FOUND
-// ========================================
-async function markAsFound(id) {
-  if (!supabase) return;
-  var { error } = await supabase
-    .from("lost_items")
-    .update({ status: "found" })
-    .eq("id", id)
-    .eq("user_id", currentUser.id);
-
-  if (error) {
-    showToast("Could not update status: " + error.message, "error");
-    return;
+    list.innerHTML = "";
+    filtered.forEach(function (item) {
+      var card = document.createElement("div");
+      card.className = "card";
+      var markBtn = "";
+      if (item.status === "active" && item.user_id === currentUser.id) {
+        markBtn = '<button class="btn btn-primary" onclick="markAsFound(' + item.id + ')">Mark as Found</button>';
+      }
+      card.innerHTML =
+        '<div class="card-title">' + sanitize(item.title) + '</div>' +
+        '<span class="badge ' + getBadgeClass(item.status) + '">' + sanitize(item.status) + '</span>' +
+        '<p class="card-meta mt-8"><strong>Category:</strong> ' + sanitize(item.category) + '</p>' +
+        '<p class="card-meta"><strong>Description:</strong> ' + sanitize(item.description || "—") + '</p>' +
+        '<p class="card-meta"><strong>Date Lost:</strong> ' + sanitize(item.date_lost) + '</p>' +
+        '<p class="card-meta"><strong>Location:</strong> ' + sanitize(item.location) + '</p>' +
+        '<div class="card-actions">' + markBtn + '</div>';
+      list.appendChild(card);
+    });
   }
-  showToast("Item marked as found!");
+
+  window.markAsFound = async function(id) {
+    if (!supabase) return;
+    var { error } = await supabase.from("lost_items").update({ status: "found" }).eq("id", id).eq("user_id", currentUser.id);
+    if (error) { showToast("Could not update status", "error"); return; }
+    showToast("Item marked as found!");
+    displayItems();
+  }
+
+  var searchInp = document.getElementById("searchInput");
+  if (searchInp) searchInp.addEventListener("input", displayItems);
+  
+  var searchLocInp = document.getElementById("searchLocation");
+  if (searchLocInp) searchLocInp.addEventListener("input", displayItems);
+  
+  var filterCat = document.getElementById("filterCategory");
+  if (filterCat) filterCat.addEventListener("change", displayItems);
+
   displayItems();
 }
-
-// ========================================
-// SEARCH + FILTER EVENTS
-// ========================================
-document.getElementById("searchInput").addEventListener("input", displayItems);
-document.getElementById("filterCategory").addEventListener("change", displayItems);
-
-// Initial load
-displayItems();
