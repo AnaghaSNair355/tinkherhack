@@ -1,71 +1,136 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Lost Items - College Lost & Found</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Report a lost item on campus and browse lost item listings.">
+  <title>Lost Items — Lost & Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <div>
-    <strong>College Lost & Found</strong>
-  </div>
-  <div>
-    <a href="lost-items.html">Lost Items</a>
-    <a href="found-items.html">Found Items</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="#" id="logoutBtn">Logout</a>
-  </div>
-</div>
+<div id="toast-container"></div>
 
-<div class="container">
+<!-- Mobile hamburger -->
+<button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <h2>Report Lost Item</h2>
+<div class="app-layout">
 
-  <!-- LOST ITEM FORM -->
-  <form id="lostItemForm">
-    <input type="text" id="title" placeholder="Item Title" required>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">🔍</div>
+        Lost &amp; Found
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="userAvatar">?</div>
+      <div class="sidebar-user-info">
+        <h3 id="userName">—</h3>
+        <p id="userEmail">—</p>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a href="lost-items.html" class="nav-link active">
+        <span class="nav-icon">📝</span> Report Lost
+      </a>
+      <a href="found-items.html" class="nav-link">
+        <span class="nav-icon">📸</span> Browse Found
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-logout" id="logoutBtn">
+        <span class="nav-icon">🚪</span> Logout
+      </button>
+    </div>
+  </aside>
 
-    <select id="category" required>
-      <option value="">Select Category</option>
-      <option value="Electronics">Electronics</option>
-      <option value="Accessories">Accessories</option>
-      <option value="Documents">Documents</option>
-      <option value="Bags">Bags</option>
-      <option value="Others">Others</option>
-    </select>
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Report a Lost Item</h1>
+      <p>Provide details about the item you've lost so others can help</p>
+    </div>
 
-    <textarea id="description" placeholder="Description" required></textarea>
+    <!-- REPORT FORM -->
+    <div class="form-card">
+      <h2>Item Details</h2>
+      <p class="subtitle">Fill in as much information as you can</p>
 
-    <input type="date" id="dateLost" required>
+      <form id="lostItemForm">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" class="form-input" placeholder="e.g. Blue Water Bottle" required>
+        </div>
+        <div class="form-group">
+          <label for="category">Category</label>
+          <select id="category" class="form-select" required>
+            <option value="">Select Category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Accessories">Accessories</option>
+            <option value="Documents">Documents</option>
+            <option value="Bags">Bags</option>
+            <option value="Others">Others</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" class="form-textarea" placeholder="Color, brand, distinguishing features…" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="dateLost">Date Lost</label>
+          <input type="date" id="dateLost" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input type="text" id="location" class="form-input" placeholder="e.g. Library, 2nd Floor" required>
+        </div>
 
-    <input type="text" id="location" placeholder="Location Lost" required>
+        <div class="info-box">
+          💡 We'll notify you if someone reports a matching found item.
+        </div>
 
-    <button type="submit">Add Lost Item</button>
-  </form>
+        <button type="submit" class="btn btn-primary-full">Submit Report</button>
+      </form>
+    </div>
 
-  <hr>
+    <hr class="section-divider">
 
-  <h2>Search Lost Items</h2>
+    <!-- SEARCH & BROWSE -->
+    <div class="page-header">
+      <h1>Browse Lost Items</h1>
+    </div>
 
-  <!-- SEARCH + FILTER -->
-  <input type="text" id="searchInput" placeholder="Search by title...">
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="form-input" placeholder="Search by title…">
+      </div>
+      <select id="filterCategory" class="form-select">
+        <option value="">All Categories</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Accessories">Accessories</option>
+        <option value="Documents">Documents</option>
+        <option value="Bags">Bags</option>
+        <option value="Others">Others</option>
+      </select>
+    </div>
 
-  <select id="filterCategory">
-    <option value="">All Categories</option>
-    <option value="Electronics">Electronics</option>
-    <option value="Accessories">Accessories</option>
-    <option value="Documents">Documents</option>
-    <option value="Bags">Bags</option>
-    <option value="Others">Others</option>
-  </select>
-
-  <div id="lostItemsList"></div>
+    <div id="lostItemsList" class="items-grid">
+      <!-- Cards rendered by JS -->
+    </div>
+  </main>
 
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <script src="js/supabase.js"></script>
 <script src="js/lost-items.js"></script>
 </body>

@@ -1,82 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Found Items - College Lost & Found</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse found items on campus or report something you've found.">
+  <title>Found Items — Lost & Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <div>
-    <strong>College Lost & Found</strong>
-  </div>
-  <div>
-    <a href="lost-items.html">Lost Items</a>
-    <a href="found-items.html">Found Items</a>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="#" id="logoutBtn">Logout</a>
-  </div>
-</div>
+<div id="toast-container"></div>
 
-<div class="container">
+<!-- Mobile hamburger -->
+<button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">☰</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <h2>Report Found Item</h2>
+<div class="app-layout">
 
-  <!-- FOUND ITEM FORM -->
-  <form id="foundItemForm">
-    <input type="text" id="title" placeholder="Item Title" required>
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon">🔍</div>
+        Lost &amp; Found
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="userAvatar">?</div>
+      <div class="sidebar-user-info">
+        <h3 id="userName">—</h3>
+        <p id="userEmail">—</p>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-link">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a href="lost-items.html" class="nav-link">
+        <span class="nav-icon">📝</span> Report Lost
+      </a>
+      <a href="found-items.html" class="nav-link active">
+        <span class="nav-icon">📸</span> Browse Found
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-logout" id="logoutBtn">
+        <span class="nav-icon">🚪</span> Logout
+      </button>
+    </div>
+  </aside>
 
-    <select id="category" required>
-      <option value="">Select Category</option>
-      <option value="Electronics">Electronics</option>
-      <option value="Accessories">Accessories</option>
-      <option value="Documents">Documents</option>
-      <option value="Bags">Bags</option>
-      <option value="Others">Others</option>
-    </select>
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Found Items</h1>
+      <p>Browse items found on campus or report something you've found</p>
+    </div>
 
-    <textarea id="description" placeholder="Description" required></textarea>
+    <!-- Search & Filter -->
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="form-input" placeholder="Search by title…">
+      </div>
+      <select id="filterCategory" class="form-select">
+        <option value="">All Categories</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Accessories">Accessories</option>
+        <option value="Documents">Documents</option>
+        <option value="Bags">Bags</option>
+        <option value="Others">Others</option>
+      </select>
+    </div>
 
-    <input type="date" id="dateFound" required>
+    <!-- Found items grid -->
+    <div id="foundItemsList" class="items-grid">
+      <!-- Cards rendered by JS -->
+    </div>
 
-    <input type="text" id="location" placeholder="Location Found" required>
+    <hr class="section-divider">
 
-    <input type="file" id="imageUpload" multiple accept="image/*" required>
+    <!-- Collapsible Report Panel -->
+    <button class="collapsible-toggle" id="reportToggle" type="button">
+      📦 Found something? Report it
+      <span class="chevron">▼</span>
+    </button>
+    <div class="collapsible-body" id="reportPanel">
+      <div class="collapsible-body-inner">
+        <form id="foundItemForm">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" class="form-input" placeholder="e.g. Black Wallet" required>
+          </div>
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" class="form-select" required>
+              <option value="">Select Category</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Documents">Documents</option>
+              <option value="Bags">Bags</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" class="form-textarea" placeholder="Color, brand, distinguishing features…" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="dateFound">Date Found</label>
+            <input type="date" id="dateFound" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label for="location">Location Found</label>
+            <input type="text" id="location" class="form-input" placeholder="e.g. Cafeteria near Block A" required>
+          </div>
+          <div class="form-group">
+            <label>Images</label>
+            <div class="upload-zone" id="uploadZone">
+              <div class="upload-zone-icon">📤</div>
+              <p>Click or drag images here</p>
+              <p class="upload-hint">JPG, PNG up to 5 MB each</p>
+              <input type="file" id="imageUpload" multiple accept="image/*" style="display:none;">
+            </div>
+            <div class="upload-preview" id="uploadPreview"></div>
+          </div>
+          <button type="submit" class="btn btn-primary-full">Add Found Item</button>
+        </form>
+      </div>
+    </div>
 
-    <button type="submit">Add Found Item</button>
-  </form>
-
-  <hr>
-
-  <h2>Search Found Items</h2>
-
-  <input type="text" id="searchInput" placeholder="Search by title...">
-
-  <select id="filterCategory">
-    <option value="">All Categories</option>
-    <option value="Electronics">Electronics</option>
-    <option value="Accessories">Accessories</option>
-    <option value="Documents">Documents</option>
-    <option value="Bags">Bags</option>
-    <option value="Others">Others</option>
-  </select>
-
-  <div id="foundItemsList"></div>
-
+  </main>
 </div>
 
 <!-- REQUEST MODAL -->
-<div class="modal" id="requestModal">
-  <div class="modal-content">
-    <h3>Request Item</h3>
-    <textarea id="requestMessage" placeholder="Why is this yours?" required></textarea>
-    <button id="sendRequestBtn">Send Request</button>
-    <button onclick="closeModal()">Cancel</button>
+<div class="modal-overlay" id="requestModal">
+  <div class="modal-card">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+    <h3>Request This Item</h3>
+    <p class="card-meta" style="margin-bottom:16px;">Explain why you believe this item is yours</p>
+    <div class="form-group">
+      <textarea id="requestMessage" class="form-textarea" placeholder="Describe the item in detail to prove ownership…" style="min-height:100px;" required></textarea>
+    </div>
+    <div class="modal-actions">
+      <button id="sendRequestBtn" class="btn btn-primary-full">Send Request</button>
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+    </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <script src="js/supabase.js"></script>
 <script src="js/found-items.js"></script>
 </body>
