@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create an account on the College Lost & Found portal.">
+  <title>Register — Lost & Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🔍</div>
+      <h1>Create Account</h1>
+      <p>Join the campus Lost &amp; Found</p>
+    </div>
+
+    <!-- Register Form -->
+    <form id="registerForm" autocomplete="on">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" class="form-input" placeholder="John Doe" required autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="form-input" placeholder="you@college.edu" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-input" placeholder="At least 6 characters" required autocomplete="new-password">
+        <div class="password-strength">
+          <div id="passwordStrengthFill" class="password-strength-fill"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" class="form-input" placeholder="+91 98765 43210" required>
+      </div>
+      <div class="form-group">
+        <label for="roll">Roll Number</label>
+        <input type="text" id="roll" class="form-input" placeholder="e.g. 22CS101" required>
+      </div>
+      <button type="submit" class="btn btn-primary-full">Create Account</button>
+    </form>
+
+    <!-- Footer -->
+    <div class="auth-footer">
+      Already have an account? <a href="../pages/index.html">Sign In</a>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+</body>
+</html>

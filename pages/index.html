@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login to the College Lost & Found portal to report or find lost items on campus.">
+  <title>Login — Lost & Found</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🔍</div>
+      <h1>Lost &amp; Found</h1>
+      <p>College Campus Portal</p>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm" autocomplete="on">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="form-input" placeholder="you@college.edu" required autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn btn-primary-full">Sign In</button>
+    </form>
+
+    <!-- Footer -->
+    <div class="auth-footer">
+      Don't have an account? <a href="register.html">Register</a>
+      <a href="#" id="resendConfirmBtn" class="resend-link" style="display:none;">Resend confirmation email</a>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../js/supabase.js"></script>
+<script src="../js/auth.js"></script>
+</body>
+</html>

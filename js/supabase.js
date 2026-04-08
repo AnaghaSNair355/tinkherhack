@@ -1,13 +1,15 @@
-// Supabase client - load after: <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+// Supabase client — reads credentials from config.js (window.APP_CONFIG)
 (function () {
-  const SUPABASE_URL = "https://aaxfzkfelxsizhbtdofo.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_MQ7WTCYKKn_Na3sQNAcbhQ_CgPaj1_z";
-
-  if (typeof supabase === "undefined") {
-    console.error("Supabase CDN not loaded. Add: <script src=\"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2\"></script>");
+  var config = window.APP_CONFIG;
+  if (!config || !config.SUPABASE_URL || !config.SUPABASE_ANON_KEY) {
+    console.error("APP_CONFIG missing. Make sure config.js is loaded before supabase.js.");
     window.supabaseClient = null;
     return;
   }
-
-  window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  if (typeof supabase === "undefined") {
+    console.error("Supabase CDN not loaded. Add: <script src=\"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2\"><\/script>");
+    window.supabaseClient = null;
+    return;
+  }
+  window.supabaseClient = supabase.createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY);
 })();
